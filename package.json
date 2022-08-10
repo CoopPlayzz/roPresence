@@ -4,21 +4,22 @@
   "description": "A Discord Rich Presence using the ROBLOX Presence API.",
   "main": "index.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron-forge start",
     "package-mac": "npm run package-mac-1 && npm run package-mac-2",
     "package-mac-1": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=./img/roPresence-logo.icns --prune=true --out=release-builds",
     "package-mac-2": "electron-installer-dmg --overwrite ./release-builds/roPresence-darwin-x64/roPresence.app roPresence --icon=./img/roPresence-logo.icns --out=release-builds",
     "package-win": "npm run package-win-1 && npm run package-win-2",
     "package-win-1": "electron-packager . --overwrite  --platform=win32 --arch=x64 --icon=./img/roPresence-logo.ico --prune=true --out=../release-builds",
     "package-win-2": "node ../build.js",
-    "package-linux": "electron-packager . --overwrite --platform=linux --arch=x64 --icon=./img/roPresence-logo-1024x1024.png --prune=true --out=release-builds"
+    "package-linux": "electron-packager . --overwrite --platform=linux --arch=x64 --icon=./img/roPresence-logo-1024x1024.png --prune=true --out=release-builds",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "author": "JiveOff",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.1",
-    "discord-rpc": "^3.1.4",
-    "electron-packager": "^15.1.0",
+    "discord-rpc": "^3.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^4.3.5",
     "open": "^7.3.0",
@@ -38,8 +39,39 @@
   },
   "bin": "index.js",
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.65",
+    "@electron-forge/maker-deb": "^6.0.0-beta.65",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.65",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.65",
+    "@electron-forge/maker-zip": "^6.0.0-beta.65",
     "electron": "^11.1.1",
-    "electron-builder": "^22.14.13",
     "standard": "^16.0.1"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "ropresence"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }

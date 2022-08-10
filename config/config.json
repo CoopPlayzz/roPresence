@@ -11,5 +11,5 @@
 	"showOfflinePresence": true,
 	"showWebsitePresence": true,
     "###": "showUsernameInPresence has to be enabled to use showLookAtProfileButton",
-    "showLookAtProfileButton": false 
+    "showLookAtProfileButton": true 
 }

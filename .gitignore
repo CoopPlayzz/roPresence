@@ -9,3 +9,4 @@ SnoreToast
 release-builds/*
 temp/*
 config/robloForMac.json
+out/
