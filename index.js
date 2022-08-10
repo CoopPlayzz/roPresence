@@ -28,34 +28,7 @@ const operateLinux = process.platform === 'linux'
 const path = require('path')
 
 
-var fs = require('fs');
-var plist = require('plist');
-var os = require('os');
-var simpleplist = require('simple-plist').default;
-/*var xml =
-  '<?xml version="1.0" encoding="UTF-8"?>' +
-  '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' +
-  '<plist version="1.0">' +
-    '<key>metadata</key>' +
-    '<dict>' +
-      '<key>bundle-identifier</key>' +
-      '<string>com.company.app</string>' +
-      '<key>bundle-version</key>' +
-      '<string>0.1.1</string>' +
-      '<key>kind</key>' +
-      '<string>software</string>' +
-      '<key>title</key>' +
-      '<string>AppName</string>' +
-    '</dict>' +
-  '</plist>';
 
-console.log(plist.parse(xml));*/
-//simpleplist.
-
-///Users/coopschwarting/Library/Preferences/com.roblox.RobloxStudioBrowser.plist
-/*var obj = plist.parse(fs.readFileSync(path.join(os.homedir(), '/Desktop/com.roblox.RobloxStudioBrowser.plist'), 'utf8'));
-console.log(obj);
-console.log(JSON.stringify(obj));*/
 
 
 
