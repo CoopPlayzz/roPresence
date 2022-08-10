@@ -8,6 +8,8 @@
     "##": "These relate to general roPresence settings.",
 	"showTips": true,
 	"showUsernameInPresence": true,
-	"showOfflinePresence": false,
-	"showWebsitePresence": true
+	"showOfflinePresence": true,
+	"showWebsitePresence": true,
+    "###": "showUsernameInPresence has to be enabled to use showLookAtProfileButton",
+    "showLookAtProfileButton": false 
 }

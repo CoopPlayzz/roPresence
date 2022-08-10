@@ -7,3 +7,5 @@ ropresence-win.exe
 SnoreToast
 .gitignore
 release-builds/*
+temp/*
+config/robloForMac.json

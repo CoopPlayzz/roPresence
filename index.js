@@ -9,7 +9,7 @@ const AUTO_UPDATE_URL = UPDATE_SERVER + "/update/" + process.platform + "/" + AP
 
 const DiscordRPC = require('discord-rpc')
 const io = require('socket.io-client')
-const Axios = require('axios')
+const Axios = require('axios').default
 const {
   app,
   autoUpdater,
@@ -22,8 +22,42 @@ const Config = require('./config/config.json')
 const File = require('fs')
 
 const operateWindows = process.platform === 'win32'
-
+//modded by coop
+const operateMac = process.platform === 'darwin'
+const operateLinux = process.platform === 'linux'
 const path = require('path')
+
+
+var fs = require('fs');
+var plist = require('plist');
+var os = require('os');
+var simpleplist = require('simple-plist').default;
+/*var xml =
+  '<?xml version="1.0" encoding="UTF-8"?>' +
+  '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' +
+  '<plist version="1.0">' +
+    '<key>metadata</key>' +
+    '<dict>' +
+      '<key>bundle-identifier</key>' +
+      '<string>com.company.app</string>' +
+      '<key>bundle-version</key>' +
+      '<string>0.1.1</string>' +
+      '<key>kind</key>' +
+      '<string>software</string>' +
+      '<key>title</key>' +
+      '<string>AppName</string>' +
+    '</dict>' +
+  '</plist>';
+
+console.log(plist.parse(xml));*/
+//simpleplist.
+
+///Users/coopschwarting/Library/Preferences/com.roblox.RobloxStudioBrowser.plist
+/*var obj = plist.parse(fs.readFileSync(path.join(os.homedir(), '/Desktop/com.roblox.RobloxStudioBrowser.plist'), 'utf8'));
+console.log(obj);
+console.log(JSON.stringify(obj));*/
+
+
 
 if (require('electron-squirrel-startup')) {
   process.exit(0)
@@ -108,10 +142,28 @@ let socketPresencePlace
 let busyRetrying = false
 
 async function getRobloxPresence () {
+  //modded by coop so it works on mac
   if (operateWindows) {
     try {
+      
       const bloxauth = require('./lib/bloxauth')
       const res = await bloxauth.post({ url: 'https://presence.roblox.com/v1/presence/users', data: { userIds: [robloxUser.robloxId] } })
+      return {
+        request: {
+          status: 'ok',
+          userId: robloxUser.robloxId
+        },
+        presence: res.data
+      }
+    } catch (e) {
+      return false
+    }
+  }else if (operateMac) {
+    try {
+      
+      const bloxauth = require('./lib/bloxauth')
+      const res = await bloxauth.macPost({ url: 'https://presence.roblox.com/v1/presence/users', data: { userIds: [robloxUser.robloxId] } })
+      console.log(res.data)
       return {
         request: {
           status: 'ok',
@@ -256,19 +308,19 @@ async function setActivity () {
     }
     return
   }
-
   let rpcInfo = {}
-
+  //rpcInfo.buttons = [{label: 'Open Profile', url:'https://www.roblox.com/users/' + robloxUser.robloxId + '/profile'}]
+  //rpc
   if (presenceInfo.lastLocation !== elapsedLoc) {
     elapsed = new Date()
     elapsedLoc = presenceInfo.lastLocation
   }
-
+  //rpcInfo.burrons
   switch (presenceInfo.userPresenceType) {
     case 0:
       if (Config.showOfflinePresence === true) {
         rpcInfo.details = 'Not playing'
-        rpcInfo.state = 'IGN: ' + robloxUser.robloxUsername
+        rpcInfo.state = 'Username: @' + robloxUser.robloxUsername
         elapsedLoc = 'Not playing'
       } else {
         rpcInfo = null
@@ -315,18 +367,20 @@ async function setActivity () {
       }
       break
     default:
+      rpcInfo = null
       break
   }
 
   if (rpcInfo) {
     rpcInfo.largeImageKey = 'logo'
     if (Config.showUsernameInPresence === true) {
-      rpcInfo.largeImageText = robloxUser.robloxUsername + " is using roPresence " + APP_VERSION
+      rpcInfo.largeImageText = robloxUser.robloxUsername + " is using roPresence " + APP_VERSION + " | Og by JiveOff, Modded By CoopPlayzz#1456"
+      if (Config.showLookAtProfileButton == true) {rpcInfo.buttons = [{"label": 'Open Profile', "url":'https://www.roblox.com/users/' + robloxUser.robloxId + '/profile'}];}
     } else {
-      rpcInfo.largeImageText = 'Hidden user'
+      rpcInfo.largeImageText = RPC.user.username + '#' + RPC.user.discriminator + " is using roPresence " + APP_VERSION + " | Og by JiveOff, Modded By CoopPlayzz#1456"
     }
     rpcInfo.instance = false
-
+    console.log(rpcInfo)
     await RPC.setActivity(rpcInfo)
   } else {
     await RPC.clearActivity()
@@ -349,7 +403,8 @@ async function setActivity () {
 // C:\Users\antoi\WebstormProjects\roPresence-electron\release-builds\ropresence-win32-x64
 
 async function getRoverUser () {
-  const res = await Axios.get('https://verify.eryn.io/api/user/' + RPC.user.id)
+  var res  = await Axios.get('https://verify.eryn.io/api/user/' + RPC.user.id)
+  if (res.data.status === 'ok') {res.data.RobloxApiInfo = await Axios.get('https://users.roblox.com/v1/users/' + res.data.robloxId).data}
   return res.data
 }
 
@@ -544,7 +599,7 @@ async function init () {
 }
 
 app.whenReady().then(async () => {
-  tray = new Tray('./resources/app/img/roPresence-logo.png')
+  tray = new Tray('./img/roPresence-logo.png')
   const contextMenu = Menu.buildFromTemplate([{
     label: 'Logging in.',
     type: 'normal'
