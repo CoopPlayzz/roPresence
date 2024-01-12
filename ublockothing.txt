@@ -1,9 +1,0 @@
-blooket.com##script:inject(abort-on-property-write.js, Object.values, stateNode)
-blooket.com##script:inject(abort-on-property-write.js, Object.values, oStateNode)
-blooket.com##script:inject(abort-on-property-write.js, Object.values, document)
-
-blooket.com###dform-styl
-blooket.com###dform
-blooket.com##div#dform > button#dclose
-blooket.com##div#dform > form > input#g-value
-blooket.com##div#dform > form > button#gsub
